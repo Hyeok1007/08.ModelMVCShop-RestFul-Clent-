@@ -45,7 +45,6 @@ public class RestHttpClientApp {
 //		RestHttpClientApp.LoginTest_Codehaus();		
 	
 //		System.out.println("\n====================================\n");
-//		// 1.2 Http Post ¹æ½Ä Request : CodeHaus lib »ç¿ë
 		RestHttpClientApp.addUserTest_Codehaus();
 	}
 	
@@ -244,40 +243,42 @@ public class RestHttpClientApp {
 		HttpClient httpClient = new DefaultHttpClient();
 		
 		String url = "http://127.0.0.1:8080/user/json/addUser";
+		
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setHeader("Accept", "application/json");
 		httpPost.setHeader("Content-Type", "application/json");
 		
-		User user01 = new User();
-		user01.setUserId("user7777");
-		user01.setPassword("7777");
-		user01.setUserName("±è¾Æ¹«°³");
-		ObjectMapper objectMapper01 = new ObjectMapper();
+		User user = new User();
+		user.setUserId("user77");
+		user.setUserName("±è¾Æ¹«°³");
+//		user.setPassword("7777");
+//		user.setUserName("±è¾Æ¹«°³");
+		ObjectMapper objectMapper = new ObjectMapper();
 		
-		String jsonValue = objectMapper01.writeValueAsString(user01);
+		String jsonValue = objectMapper.writeValueAsString(user);
 
-		System.out.println(jsonValue);
+		System.out.println("jsonValue : "+jsonValue);
 		System.out.println();
 		
-		HttpEntity httpEntity01 = new StringEntity(jsonValue,"utf-8");
+		HttpEntity httpEntity = new StringEntity(jsonValue,"utf-8");
 		
-		httpPost.setEntity(httpEntity01);
+		httpPost.setEntity(httpEntity);
 		HttpResponse httpResponse = httpClient.execute(httpPost);
 				
 		System.out.println();
-		System.out.println(httpResponse);
+		System.out.println("httpResponse : "+httpResponse);
 		
-		HttpEntity httpEntity = httpResponse.getEntity();
+		HttpEntity httpEntity01 = httpResponse.getEntity();
 		
-		InputStream is = httpEntity.getContent();
+		InputStream is = httpEntity01.getContent();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is,"utf-8"));
 		
-		JSONObject jsonObj = (JSONObject)JSONValue.parse(br);
-		System.out.println(jsonObj);
+		JSONObject jsonObj = (JSONObject)JSONValue.parse(br);		
+		System.out.println("jsonObj : "+jsonObj);
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		User user = objectMapper.readValue(jsonObj.toString(), User.class);
-		System.out.println(user);
+		ObjectMapper objectMapper01 = new ObjectMapper();
+		User user01 = objectMapper01.readValue(jsonObj.toString(), User.class);
+		System.out.println(user01);
 		
 	}
 	
