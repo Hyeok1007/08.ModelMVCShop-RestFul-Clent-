@@ -44,6 +44,9 @@ public class RestHttpClientApp {
 //		// 1.2 Http Post 방식 Request : CodeHaus lib 사용
 //		RestHttpClientApp.LoginTest_Codehaus();		
 	
+//		System.out.println("\n====================================\n");
+//		// 1.2 Http Post 방식 Request : CodeHaus lib 사용
+		RestHttpClientApp.addUserTest_Codehaus();
 	}
 	
 	
@@ -235,5 +238,47 @@ public class RestHttpClientApp {
 		 User user = objectMapper.readValue(jsonobj.toString(), User.class);
 		 System.out.println(user);
 	}	
+	
+	public static void addUserTest_Codehaus() throws Exception{
+		
+		HttpClient httpClient = new DefaultHttpClient();
+		
+		String url = "http://127.0.0.1:8080/user/json/addUser";
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setHeader("Accept", "application/json");
+		httpPost.setHeader("Content-Type", "application/json");
+		
+		User user01 = new User();
+		user01.setUserId("user7777");
+		user01.setPassword("7777");
+		user01.setUserName("김아무개");
+		ObjectMapper objectMapper01 = new ObjectMapper();
+		
+		String jsonValue = objectMapper01.writeValueAsString(user01);
+
+		System.out.println(jsonValue);
+		System.out.println();
+		
+		HttpEntity httpEntity01 = new StringEntity(jsonValue,"utf-8");
+		
+		httpPost.setEntity(httpEntity01);
+		HttpResponse httpResponse = httpClient.execute(httpPost);
+				
+		System.out.println();
+		System.out.println(httpResponse);
+		
+		HttpEntity httpEntity = httpResponse.getEntity();
+		
+		InputStream is = httpEntity.getContent();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,"utf-8"));
+		
+		JSONObject jsonObj = (JSONObject)JSONValue.parse(br);
+		System.out.println(jsonObj);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		User user = objectMapper.readValue(jsonObj.toString(), User.class);
+		System.out.println(user);
+		
+	}
 	
 }
