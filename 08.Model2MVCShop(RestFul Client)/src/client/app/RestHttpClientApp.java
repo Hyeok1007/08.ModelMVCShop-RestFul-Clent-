@@ -45,7 +45,10 @@ public class RestHttpClientApp {
 //		RestHttpClientApp.LoginTest_Codehaus();		
 	
 //		System.out.println("\n====================================\n");
-		RestHttpClientApp.addUserTest_Codehaus();
+//		RestHttpClientApp.addUserTest_Codehaus();
+		
+//		System.out.println("\n====================================\n");
+		RestHttpClientApp.updateUserTest_Codehaus();
 	}
 	
 	
@@ -251,8 +254,7 @@ public class RestHttpClientApp {
 		User user = new User();
 		user.setUserId("user77");
 		user.setUserName("±è¾Æ¹«°³");
-//		user.setPassword("7777");
-//		user.setUserName("±è¾Æ¹«°³");
+		user.setPassword("7777");
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		String jsonValue = objectMapper.writeValueAsString(user);
@@ -280,6 +282,49 @@ public class RestHttpClientApp {
 		User user01 = objectMapper01.readValue(jsonObj.toString(), User.class);
 		System.out.println(user01);
 		
+	}
+	
+	public static void updateUserTest_Codehaus() throws Exception {
+		
+		HttpClient httpClient = new DefaultHttpClient();
+		
+		String url = "http://127.0.0.1:8080/user/json/updateUser";
+		
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setHeader("Accept", "application/json");
+		httpPost.setHeader("Content-Type", "application/json");
+		
+		User user = new User();
+		user.setUserId("user88");
+		user.setUserName("±è¾Æ¹«°³Ä£±¸");
+		user.setPassword("8888");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		String jsonValue = objectMapper.writeValueAsString(user);
+
+		System.out.println("jsonValue : "+jsonValue);
+		System.out.println();
+		
+		HttpEntity httpEntity = new StringEntity(jsonValue,"utf-8");
+		
+		httpPost.setEntity(httpEntity);
+		HttpResponse httpResponse = httpClient.execute(httpPost);
+				
+		System.out.println();
+		System.out.println("httpResponse : "+httpResponse);
+		
+		HttpEntity httpEntity01 = httpResponse.getEntity();
+		
+		InputStream is = httpEntity01.getContent();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,"utf-8"));
+		
+		JSONObject jsonObj = (JSONObject)JSONValue.parse(br);		
+		System.out.println("jsonObj : "+jsonObj);
+		
+		ObjectMapper objectMapper01 = new ObjectMapper();
+		User user01 = objectMapper01.readValue(jsonObj.toString(), User.class);
+		System.out.println(user01);
 	}
 	
 }
