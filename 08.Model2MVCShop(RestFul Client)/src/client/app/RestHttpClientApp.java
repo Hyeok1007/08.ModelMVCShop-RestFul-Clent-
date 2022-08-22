@@ -58,10 +58,10 @@ public class RestHttpClientApp {
 //		RestHttpClientApp.getProductTest_Codehaus();
 		
 //		System.out.println("\n====================================\n");
-		RestHttpClientApp.addProductTest_Codehaus();
+//		RestHttpClientApp.addProductTest_Codehaus();
 		
 //		System.out.println("\n====================================\n");
-//		RestHttpClientApp.updateProductTest_Codehaus();
+		RestHttpClientApp.updateProductTest_Codehaus();
 	}
 	
 	
@@ -419,7 +419,7 @@ public class RestHttpClientApp {
 	
 	public static void addProductTest_Codehaus() throws Exception {
 		
-/*		HttpClient httpClient = new DefaultHttpClient();
+	HttpClient httpClient = new DefaultHttpClient();
 		
 		String url = "http://127.0.0.1:8080/product/json/addProduct";
 		
@@ -428,12 +428,12 @@ public class RestHttpClientApp {
 		httpPost.setHeader("Content-Type", "application/json");
 
 		Product product = new Product();
-//		product.setProdNo();
+//		product.setProdNo(11111);
 		product.setProdName("레스트 테스트 상품");
 		product.setProdDetail("test product detail");
-		product.setManuDate("2022-08-10");
+//		product.setManuDate("2022-08-10");
 		product.setPrice(1111);
-		product.setFileName("test product");		
+//		product.setFileName("test product");		
 //		product.setRegDate(null);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -462,48 +462,50 @@ public class RestHttpClientApp {
 		ObjectMapper objectMapper01 = new ObjectMapper();
 		Product product01 = objectMapper01.readValue(jsonObj.toString(), Product.class);
 		System.out.println(product01);
-	}	*/
-		// HttpClient : Http Protocol 의 client 추상화 
-				HttpClient httpClient = new DefaultHttpClient();
-				
-				String url = "http://127.0.0.1:8080/product/json/addProduct";
-				HttpPost httpPost = new HttpPost(url);
-				httpPost.setHeader("Accept", "application/json");
-				httpPost.setHeader("Content-Type", "application/json");
-				
-				//[ 방법 1 : String 사용]
-//					String data =  "{\"userId\":\"admin\",\"password\":\"1234\"}";
-//					HttpEntity httpEntity01 = new StringEntity(data,"utf-8");
-				
-				//[ 방법 2 : JSONObject 사용]
-				JSONObject json = new JSONObject();
-				json.put("prodName", "REST TEST PRODUCT");
-				json.put("ProdDetail", "TEST PRODUCT DETAIL");
-				json.put("price", 1111);
-				HttpEntity httpEntity01 = new StringEntity(json.toString(),"utf-8");
-
-				httpPost.setEntity(httpEntity01);
-				HttpResponse httpResponse = httpClient.execute(httpPost);
-				
-				//==> Response 확인
-				System.out.println(httpResponse);
-				System.out.println();
-
-				//==> Response 중 entity(DATA) 확인
-				HttpEntity httpEntity = httpResponse.getEntity();
-				
-				//==> InputStream 생성
-				InputStream is = httpEntity.getContent();
-				BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-				
-				System.out.println("[ Server 에서 받은 Data 확인 ] ");
-				String serverData = br.readLine();
-				System.out.println(serverData);
-				
-				//==> 내용읽기(JSON Value 확인)
-				JSONObject jsonobj = (JSONObject)JSONValue.parse(serverData);
-				System.out.println(jsonobj);
+	}
+	
+	public static void updateProductTest_Codehaus() throws Exception {
+		
+		HttpClient httpClient = new DefaultHttpClient();
 			
-			}
+			String url = "http://127.0.0.1:8080/product/json/updateProduct";
+			
+			HttpPost httpPost = new HttpPost(url);
+			httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("Content-Type", "application/json");
+
+			Product product = new Product();
+
+			product.setProdName("레스트 테스트 상품");
+			product.setProdDetail("test product detail");
+			product.setPrice(1111);
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			String jsonValue = objectMapper.writeValueAsString(product);
+
+			System.out.println("jsonValue : "+jsonValue);
+			System.out.println();
+			
+			HttpEntity httpEntity = new StringEntity(jsonValue,"utf-8");
+			
+			httpPost.setEntity(httpEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+					
+			System.out.println();
+			System.out.println("httpResponse : "+httpResponse);
+			
+			HttpEntity httpEntity01 = httpResponse.getEntity();
+			
+			InputStream is = httpEntity01.getContent();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is,"utf-8"));
+			
+			JSONObject jsonObj = (JSONObject)JSONValue.parse(br);		
+			System.out.println("jsonObj : "+jsonObj);
+			
+			ObjectMapper objectMapper01 = new ObjectMapper();
+			Product product01 = objectMapper01.readValue(jsonObj.toString(), Product.class);
+			System.out.println(product01);
+		}
 	
 }
